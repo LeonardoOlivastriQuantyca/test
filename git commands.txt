@@ -1,6 +1,6 @@
 git init - Fai avviare git
 git add - Crei una repo con i file che indichi (se indichi "." allora crei una repo con tutti i file di un progetto)
-git diff - trovi la differenza tra una versione e un'altra
+git diff - trovi la differenza tra una versione e un'altra. Se si aggiunge --staged farà vedere solo le modifiche ai file aggiunti al prossimo commit (i file staged, appunto)
 git checkout - torni a una versione precedente
 git switch - cambia il branch su cui si sta lavorando
 git clone - copia tutta una repo in locale
