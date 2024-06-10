@@ -12,3 +12,5 @@ git remote add origin - linka la tua repo locale a una presente online, in modo 
 
 git push -u "destinazione" - pushare il proprio codice sulla repo indicata sotto "destinazione"
 
+git commit - salva le modifiche fatte. Se si aggiunge il parametro -a, non sarà necessario lanciare prima il comando "git add", e tutte i file modificati verranno committati (QUINDI OCCHIO)
+
