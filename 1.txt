@@ -1,0 +1,369 @@
+1
+
+
+--- 1 --- 
+
+SELECT Nome
+FROM SALE
+WHERE Città = 'Pisa'
+
+--- 2 ---
+
+SELECT Titolo
+FROM FILM
+WHERE Regista = 'F.Fellini'
+AND AnnoProduzione > 1960
+
+--- 3 ---
+
+SELECT Titolo
+FROM FILM
+WHERE AnnoProduzione > 1990 AND
+(Nazionalità = 'giapponese' OR Nazionalità = 'francese') AND
+Genere = 'fantascienza'
+
+--- 4 ---
+
+SELECT Titolo
+FROM FILM
+WHERE (Nazionalità = 'giapponese' AND Genere = 'fantascienza' AND AnnoProduzione > 1990) OR
+Nazionalità = 'francese'
+
+--- 5 ---
+
+SELECT Titolo
+FROM FILM
+WHERE Regista = (SELECT Regista FROM FILM WHERE Titolo = 'Casablanca')
+
+--- 6 ---
+
+SELECT Titolo, Genere
+FROM FILM
+INNER JOIN PROIEZIONI
+ON FILM.CodFilm = PROIEZIONI.CodFilm
+WHERE PROIEZIONI.DataProiezione = 25/12/2004
+
+--- 7 ---
+
+SELECT DISTINCT(FILM.Titolo), FILM.Genere
+FROM FILM
+INNER JOIN PROIEZIONI
+ON FILM.CodFilm = PROIEZIONI.CodFilm
+INNER JOIN SALE
+ON PROIEZIONI.CodSala = SALE.CodSala
+WHERE PROIEZIONI.DataProiezione = 25/12/2004 AND
+SALE.Città = 'Napoli'
+
+--- 8 ---
+
+SELECT SALE.Nome
+FROM SALE
+INNER JOIN PROIEZIONI
+ON SALE.CodSala = PROIEZIONI.CodSala
+INNER JOIN FILM
+ON PROIEZIONI.CodFilm = FILM.CodFilm
+INNER JOIN RECITA
+ON FILM.CodFilm = RECITA.CodFilm
+INNER JOIN ATTORI
+ON RECITA.CodAttore = ATTORI.CodAttore
+WHERE SALE.Città = 'Napoli' AND
+PROIEZIONI.DataProiezione = 25/12/2004
+AND ATTORI.Nome = 'R.Williams'
+
+--- 9 ---
+
+SELECT DISTINCT(FILM.Titolo)
+FROM FILM, ATTORI, RECITA
+WHERE (ATTORI.Nome = 'M. Mastroianni' OR ATTORI.Nome = 'S. Loren') AND
+FILM.CodFilm = RECITA.CodFilm AND 
+RECITA.CodAttore = ATTORI.CodAttore
+
+--- 10 ---
+
+SELECT FILM.Titolo
+FROM FILM, ATTORI, RECITA
+WHERE ATTORI.Nome = 'M. Mastroianni' AND ATTORI.Nome = 'S. Loren' AND
+FILM.CodFilm = RECITA.CodFilm AND 
+RECITA.CodAttore = ATTORI.CodAttore
+
+--- 11 ---
+
+SELECT FILM.Titolo, ATTORI.Nome
+FROM FILM
+INNER JOIN RECITA
+ON FILM.CodFilm = RECITA = CodFilm
+INNER JOIN ATTORI
+ON RECITA.CodAttore = ATTORI.CodAttore
+WHERE FILM.Titolo IN (
+	SELECT FILM.Titolo 
+	FROM FILM, RECITA, ATTORI
+	WHERE ATTORI.Nazionalità = 'francese' AND
+	ATTORI.CodAttore = RECITA.CodAttore AND
+	FILM.CodFilm = RECITA.CodFilm
+)
+
+--- 12 ---
+
+SELECT FILM.Titolo, SALE.Nome
+FROM FILM, SALE, PROIEZIONI
+WHERE PROIEZIONI.DataProiezione BETWEEN 01/01/2005 AND 31/01/2005
+SALE.Città = 'Pisa' AND
+SALE.CodSala = PROIEZIONI.CodSala AND
+PROIEZIONI.CodFilm = FILM.CodFilm
+
+--- 13 ---
+
+SELECT COUNT(*)
+FROM SALE
+WHERE Città = 'Pisa'
+AND Posti > 60
+
+--- 14 ---
+
+SELECT SUM(Posti)
+FROM SALE
+WHERE Città = 'Pisa'
+
+--- 15 ---
+
+SELECT Città, COUNT(*)
+FROM SALE
+GROUP BY Città
+
+--- 16 ---
+
+SELECT Città, COUNT(*)
+FROM SALE
+GROUP BY Città
+HAVING Posti > 60
+
+--- 17 ---
+
+SELECT Regista, COUNT(*)
+FROM FILM
+WHERE AnnoProduzione > 1990
+GROUP BY Regista
+
+--- 18 ---
+
+SELECT FILM.Regista, SUM(PROIEZIONI.Incasso) AS Incasso_Totale
+FROM FILM
+INNER JOIN PROIEZIONI
+ON FILM.CodFilm = PROIEZIONI.CodFilm
+GROUP BY REGISTA
+
+
+--- 19 ---
+
+SELECT FILM.Titolo, COUNT(*) AS NumProiezioni, SUM(PROIEZIONI.Incasso) AS IncassoTotale
+FROM FILM
+INNER JOIN PROIEZIONI
+ON FILM.CodFilm = PROIEZIONI.CodFilm
+WHERE FILM.Regista = 'S.Spielberg'
+GROUP BY FILM.Titolo
+
+--- 20 ---
+
+SELECT FILM.Regista, ATTORI.Nome, COUNT(*) AS NumFilm
+FROM FILM
+INNER JOIN RECITA
+ON FILM.CodFilm = RECITA.CodFilm
+INNER JOIN ATTORI
+ON RECITA.CodAttore = ATTORI.CodAttore
+GROUP BY FILM.Regista, ATTORI.CodAttore, ATTORI.Nome
+
+--- 21 ---
+
+SELECT FILM.Regista, FILM.Titolo
+FROM FILM, RECITA
+WHERE FILM.CodFilm = RECITA.CodFilm
+GROUP BY FILM.Titolo, FILM.Regista
+HAVING COUNT(*) < 6
+
+--- 22 ---
+
+SELECT FILM.CodFilm, FILM.Titolo, SUM(PROIEZIONI.Incasso) AS Incasso_Totale
+FROM FILM, PROIEZIONI
+WHERE AnnoProduzione > 2000 AND
+FILM.CodFilm = PROIEZIONI.CodFilm
+GROUP BY FILM.CodFilm, FILM.Titolo
+
+--- 23 ---
+
+SELECT FILM.Titolo, COUNT(*) AS NumAttori
+FROM FILM
+INNER JOIN RECITA
+ON FILM.CodFilm = RECITA.CodFilm
+INNER JOIN ATTORI
+ON RECITA.CodAttore = ATTORI.CodAttore
+GROUP BY FILM.Titolo
+HAVING MAX(ATTORI.AnnoNascita) < 1970
+
+--- 24 ---
+
+SELECT FILM.Titolo, SUM(PROIEZIONI.Incasso) AS IncassoTotale
+FROM FILM, PROIEZIONI
+WHERE FILM.Genere = 'fantascienza' AND
+FILM.CodFilm = PROIEZIONI.CodFilm
+GROUP BY FILM.Titolo
+
+--- 25 ---
+
+SELECT FILM.Titolo, SUM(PROIEZIONI.Incasso) AS IncassoTotale
+FROM FILM, PROIEZIONI
+WHERE FILM.Genere = 'fantascienza' AND
+FILM.CodFilm = PROIEZIONI.CodFilm AND
+PROIEZIONI.DataProiezione > '01/01/2001'
+GROUP BY FILM.Titolo
+
+--- 26 ---
+
+SELECT FILM.Titolo, SUM(PROIEZIONI.Incasso) AS IncassoTotale
+FROM FILM
+INNER JOIN PROIEZIONI
+ON FILM.CodFilm = PROIEZIONI.CodFilm
+GROUP BY FILM.Titolo
+HAVING MIN(PROIEZIONI.DataProiezione) >= 01/01/2001
+
+--- 27 ---
+
+SELECT s.Nome, SUM(s.Incasso) AS IncassoTotale
+FROM SALE s
+INNER JOIN PROIEZIONI p
+ON s.CodSala = p.CodSala
+WHERE p.DataProiezione BETWEEN 01/01/2005 AND 31/01/2005
+GROUP BY s.CodSala, s.Nome
+HAVING SUM(p.Incasso) > 20000
+
+
+--- 28 ---
+
+SELECT FILM.Titolo
+FROM FILM
+WHERE FILM.Titolo NOT IN (
+	SELECT FILM.Titolo
+	FROM FILM, PROIEZIONI, SALE
+	WHERE FILM.CodFilm = PROIEZIONI.CodFilm AND
+	PROIEZIONI.CodSala = SALE.CodSala
+	AND SALE.Città = 'Pisa'
+)
+
+--- 29 ---
+
+SELECT FILM.Titolo
+FROM FILM, PROIEZIONI, SALE
+WHERE FILM.Titolo NOT IN (
+	SELECT FILM.Titolo
+	FROM FILM, PROIEZIONI, SALE
+	WHERE FILM.CodFilm = PROIEZIONI.CodFilm AND
+	PROIEZIONI.CodSala = SALE.CodSala
+	AND SALE.Città <> 'Pisa'
+)
+
+--- 30 ---
+
+SELECT FILM.Titolo
+FROM FILM
+WHERE NOT EXISTS (
+	SELECT *
+	FROM PROIEZIONI
+	ON FILM.CodFilm = PROIEZIONI.CodFilm
+	WHERE PROIEZIONI.Incasso > 500
+)
+
+--- 31 ---
+
+SELECT FILM.Titolo
+FROM FILM
+WHERE NOT EXISTS (
+	SELECT *
+	FROM PROIEZIONI
+	WHERE FILM.CodFilm = PROIEZIONI.CodFilm AND
+	PROIEZIONI.Incasso <= 500
+)
+
+
+--- 32 ---
+
+SELECT a.Nome
+FROM ATTORI a
+WHERE NOT EXISTS (
+	SELECT a.Nome
+	FROM RECITA r, FILM f
+	WHERE f.Regista = 'Fellini' AND
+	f.CodFilm = r.CodFilm AND
+	f.CodAttore = a.CodAttore
+) AND a.Nazionalità = 'italiana'
+
+--- 33 ---
+
+SELECT f.Titolo
+FROM FILM f
+WHERE NOT EXISTS (
+	SELECT * 
+	FROM RECITA r, ATTORI a
+	WHERE a.Nazionalità = 'italiana' AND
+	f.CodFilm = r.CodFilm AND
+	r.CodAttore = a.CodAttore
+) AND
+f.Regista = 'Fellini'
+
+--- 34 ---
+
+SELECT f.Titolo
+FROM FILM f
+WHERE f.Titolo NOT IN(
+	SELECT f.Titolo
+	FROM FILM f, RECITA r, ATTORI a
+	WHERE a.Nome IS NOT NULL
+)
+
+--- 35 ---
+
+SELECT a.Nome
+FROM ATTORI a
+INNER JOIN RECITA r
+ON a.CodAttore = r.CodAttore
+INNER JOIN FILM f
+ON r.CodFilm = f.CodFilm
+WHERE a.Nome NOT IN(
+	SELECT a.Nome
+	FROM ATTORI a, RECITA r, FILM f
+	WHERE f.Regista <> 'Fellini' AND
+	a.CodAttore = r.CodAttore AND
+	r.CodFilm = f.CodFilm) AND
+f.AnnoProduzione < 1960
+
+--- 36 ---
+
+SELECT a.Nome
+FROM ATTORI a
+WHERE a.Nome IN (
+	SELECT a.Nome
+	FROM RECITA r, FILM f
+	WHERE f.AnnoProduzione < 1960 AND
+	f.Regista = 'Fellini'
+	AND a.CodAttore = r.CodAttore AND
+	r.CodFilm = f.CodFilm
+) AND
+a.Nome NOT IN (
+	SELECT a.Nome
+	FROM RECITA r, FILM f
+	WHERE f.AnnoProduzione > 1960 AND
+	f.Regista = 'Fellini'
+	AND a.CodAttore = r.CodAttore AND
+	r.CodFilm = f.CodFilm
+)
+
+
+
+
+
+
+
+
+
+
+
+
+

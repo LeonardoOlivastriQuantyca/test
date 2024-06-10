@@ -1,0 +1,114 @@
+4
+
+
+--- 1 ---
+
+SELECT Titolo
+FROM romanzi
+WHERE Anno BETWEEN 1800 AND 1899
+
+--- 2 ---
+
+SELECT r.Titolo, a.NomeAut, r.Anno
+FROM romanzi r
+JOIN autori a
+ON r.NomeAut = a.NomeAut
+WHERE a.Nazione = 'Russia' 
+ORDER BY a.NomeAut, r.Anno
+
+--- 3 ---
+
+SELECT p.NomeP
+FROM personaggi p
+JOIN romanzi r
+ON p.CodiceR = r.CodiceR
+JOIN autori a
+ON a.NomeAut = r.NomeAut
+WHERE p.ruolo = 'P' AND
+a.AnnoM IS NULL
+
+--- 4 ---
+
+SELECT r.Titolo
+FROM romanzi r
+JOIN film f
+ON r.CodiceR = f.CodiceR
+WHERE r.Titolo = f.Titolo
+
+--- 5 ---
+
+SELECT f.Titolo, f.Regista, f.Anno
+FROM film f 
+JOIN romanzi r
+ON f.CodiceR = r.CodiceR
+WHERE r.Titolo = 'Robin Hood'
+
+--- 6 ---
+
+SELECT a.NomeAut, MIN(r.Anno) AS PrimoLibro, MAX(r.Anno) AS UltimoLibro
+FROM autori a
+JOIN romanzi r
+ON a.NomeAut = r.NomeAut
+WHERE a.Nazione = 'Italia'
+GROUP BY a.NomeAut
+
+--- 7 ---
+
+SELECT NomeP, COUNT(*) AS NumApparizioni
+FROM personaggi 
+GROUP BY NomeP
+HAVING COUNT(*) > 1
+
+--- 8 ---
+
+SELECT r.Titolo
+FROM romanzi r
+JOIN autori a
+ON a.NomeAut = r.NomeAut
+JOIN film f
+ON r.CodiceR = f.CodiceR
+WHERE a.Nazione = 'Italia'
+GROUP BY r.Titolo
+HAVING COUNT(*) > 1
+
+--- 9 ---
+
+SELECT r.Titolo 
+FROM romanzi r
+LEFT OUTER JOIN film f
+ON r.CodiceR = f.CodiceR
+
+--- 10 ---
+
+SELECT r.Titolo
+FROM romanzi r
+JOIN personaggi p
+ON p.CodiceR = r.CodiceR
+WHERE NOT EXISTS (
+	SELECT *
+	FROM personaggi p
+	WHERE p.ruolo = 'P' AND
+	p.sesso <> 'F'
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

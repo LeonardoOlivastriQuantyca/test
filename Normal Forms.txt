@@ -1,0 +1,16 @@
+1NF -   Eliminating duplicate columns of repetitive data
+    	Making sure each attribute of the data contains a single value instead of multiple values
+    	Identifying key attributes that we can use as the data’s unique identifiers (or primary keys)
+
+2NF -   Every attribute cannot be dependent on a subset of a candidate key
+
+3NF -	An attribute cannot depend on another attribute, which is not a candidate key
+
+Elementary Key NF - Every non-key attribute depends on each candidate key
+		    Every elementary key attribute depends on each candidate key
+
+Boyce-Codd NF -     Every attribute (key or non-key) depends on each candidate key
+
+4NF - 	The only kinds of multivalued dependency allowed in a table are multivalued dependencies on the key. A multivalued dependency is a relationship between A & B, where B can have multiple values.
+
+5NF - 	The table cannot be describable as the logical result of joining some other tables together

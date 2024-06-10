@@ -1,0 +1,153 @@
+2
+
+
+--- 1 ---
+
+SELECT Codice, Titolo
+FROM opere
+WHERE NomeA = 'Tiziano' AND
+NomeM = 'National Gallery' 
+
+--- 2 ---
+
+SELECT NomeA, Titolo
+FROM opere
+WHERE NomeM IN ('Galleria degli Uffizi', 'National Gallery')
+
+--- 3 ---
+
+SELECT o.NomeA, o.Titolo
+FROM opere o, musei m
+WHERE o.NomeM = m.NomeM AND
+m.Città = 'Firenze'
+
+--- 4 ---
+
+SELECT DISTINCT(m.Città)
+FROM musei m
+INNER JOIN opere o
+ON m.NomeM = o.NomeM
+WHERE o.NomeA = 'Caravaggio'
+
+--- 5 ---
+
+SELECT o.Codice, o.Titolo
+FROM opere o
+JOIN musei m
+ON o.NomeM = m.NomeM
+WHERE m.Città = 'Londra' AND
+o.NomeA = 'Tiziano'
+
+--- 6 ---
+
+SELECT o.NomeA, o.Titolo
+FROM opere o
+INNER JOIN artisti a
+ON o.NomeA = a.NomeA
+INNER JOIN musei m
+ON o.NomeM = m.NomeM
+WHERE a.Nazionalità ='spagnola' AND
+m.Città = 'Firenze'
+
+--- 7 ---
+
+SELECT o.Codice, o.Titolo
+FROM opere o, artisti a, musei m, personaggi p
+WHERE a.Nazionalità = 'italiana' AND
+m.Città = 'Londra' AND
+p.Personaggio = 'Madonna' AND
+o.NomeA = a.NomeA AND o.NomeM = m.NomeM AND o.Codice = p.Codice
+
+--- 8 ---
+
+SELECT m.NomeM, COUNT(*) AS NumOpere
+FROM musei m
+INNER JOIN opere o
+ON m.NomeM, o.NomeM
+INNER JOIN artisti a
+ON o.NomeA = a.NomeA
+WHERE a.Nazionalità = 'italiana' AND
+n.Città = 'Londra'
+GROUP BY m.NomeM
+
+--- 9 ---
+
+SELECT m.NomeM
+FROM musei m
+WHERE NOT EXISTS (SELECT * 
+	FROM opere o
+	WHERE o.NomeA = 'Tiziano' AND
+	o.NomeM = m.NomeM) AND
+m.Città = 'Londra'
+
+--- 10 ---
+
+SELECT m.NomeM
+FROM musei m
+WHERE m.Città = 'Londra' AND
+NOT EXISTS (
+	SELECT *
+	FROM opere o
+	WHERE o.NomeA <> 'Tiziano' AND
+	o.NomeM = m.NomeM)
+
+--- 11 ---
+
+SELECT NomeA, COUNT(*) AS NumOpere
+FROM opere
+WHERE NomeM = 'Galleria degli Uffizi'
+GROUP BY NomeA
+
+--- 12 ---
+
+SELECT o.NomeM
+FROM opere o
+JOIN artisti a
+ON o.NomeA = a.NomeA
+WHERE a.Nazionalità = 'italiana'
+GROUP BY o.NomeM
+HAVING COUNT(*) >= 20
+
+--- 13 ---
+
+SELECT o.Titolo, o.NomeA
+FROM opere o
+LEFT OUTER JOIN personaggi p
+ON o.Codice = p.Codice
+JOIN artisti a 
+ON a.NomeA = o.NomeA
+WHERE a.Nazionalità = 'italiana'
+
+--- 14 ---
+
+SELECT m.NomeM
+FROM musei m
+JOIN opere o
+ON m.NomeM = o.NomeM
+WHERE NOT EXISTS (
+	SELECT *
+	FROM artisti a
+	WHERE a.Nazionalità = 'italiana' AND
+	a.NomeA <> 'Tiziano' AND
+	a.NomeA = o.NomeA
+)
+
+--- 15 ---
+
+SELECT o.NomeM, a.Nazionalità, COUNT(o.*) AS NumOpere
+FROM artisti a, opere o
+WHERE o.NomeA = a.NomeA
+GROUP BY m.NomeM, a.Nazionalità
+
+
+
+
+
+
+
+
+
+
+
+
+

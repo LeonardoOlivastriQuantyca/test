@@ -1,0 +1,118 @@
+3
+
+
+--- 1 ---
+
+SELECT Targa, Marca
+FROM auto
+WHERE Cilindrata > 2000 OR
+Potenza > 120
+
+--- 2 ---
+
+SELECT p.Nome, a.Targa
+FROM proprietari p, auto a
+WHERE (Cilindrata > 2000 OR
+Potenza > 120) AND
+a.CodF = p.CodF
+
+--- 3 ---
+
+SELECT a.Targa, p.Nome
+FROM proprietari p, auto a, assicurazioni si
+WHERE (Cilindrata > 2000 OR
+Potenza > 120) AND 
+si.Nome = 'SARA' AND
+a.CodF = p.CodF AND
+a.CodAss = si.CodAss
+
+--- 4 ---
+
+SELECT a.Targa, p.Nome
+FROM auto a
+JOIN proprietari p
+ON a.CodF = p.CodF
+JOIN assicurazioni as
+ON a.CodAss = as.CodAss
+JOIN autocoinvolte au
+ON au.Targa = a.Targa
+JOIN sinistro si
+ON au.CodS = si.CodS
+WHERE si.Data = 20/01/2001 AND
+as.Nome = 'SARA'
+
+--- 5 ---
+
+SELECT as.Nome, as.Sede, COUNT(a.*) AS NumAuto
+FROM assicurazioni as, auto a
+WHERE as.CodAss = a.CodAss
+GROUP BY as.CodAss, as.Nome, as.Sede
+
+--- 6 ---
+
+SELECT a.Targa, COUNT(au.*) AS NumSinistri
+FROM auto a
+JOIN autocoinvolte au
+ON a.Targa=au.Targa
+WHERE a.Marca = 'Fiat'
+GROUP BY a.Targa
+
+--- 7 ---
+
+SELECT a.Targa, as.Nome, SUM(au.Importo del danno) AS TotDanni
+FROM auto a, assicurazioni as, autocoinvolte au
+WHERE a.CodAss = as.CodAss AND a.Targa = au.Targa
+GROUP BY a.Targa
+HAVING COUNT(*) > 1
+
+--- 8 ---
+
+SELECT p.CodF, p.Nome 
+FROM proprietari p
+JOIN auto a
+ON p.CodF = a.CodF
+GROUP BY p.CodF
+HAVING COUNT(*) > 1
+
+--- 9 ---
+
+SELECT a.Targa
+FROM auto a
+WHERE NOT EXISTS (
+	SELECT *
+	FROM autocoinvolte au, sinistro si
+	WHERE a.Targa = au.Targa AND
+	au.CodS = si.CodS AND
+	si.Data >= 20/01/2001
+)
+
+--- 10 ---
+
+SELECT au.CodS
+FROM autocoinvolte au
+JOIN auto a
+ON au.Targa = a.Targa
+WHERE au.CodS NOT IN (
+	SELECT DISTINCT(au.CodS)
+	FROM autocoinvolte au
+	WHERE a.Cilindrata < 2000
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
