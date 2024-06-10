@@ -4,6 +4,7 @@ git diff - trovi la differenza tra una versione e un'altra
 git checkout - torni a una versione precedente
 git switch - cambia il branch su cui si sta lavorando
 git clone - copia tutta una repo in locale
+git log - log dei commit storici
 
 git config - configura alcuni parametri di Git, come utente o email
 
