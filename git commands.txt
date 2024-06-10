@@ -6,3 +6,8 @@ git switch - cambia il branch su cui si sta lavorando
 git clone - copia tutta una repo in locale
 
 git config - configura alcuni parametri di Git, come utente o email
+
+git remote add origin - linka la tua repo locale a una presente online, in modo da salvare le tue modifiche su cloud
+
+git push -u "destinazione" - pushare il proprio codice sulla repo indicata sotto "destinazione"
+
